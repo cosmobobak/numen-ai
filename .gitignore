@@ -123,3 +123,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+winenv/
+logs/
+
+
+connect4_checkpoints/
+*chessData.csv
+
+chessmodels/chessData.csv
+chessmodels/chessData.csv
+50000_15000_onehot.csv
+50000_15000.csv
+evalmodel/
+training_7/
