@@ -45,7 +45,7 @@ def main():
 
     # exit()
 
-    model = ChessNet(dims=(11, 8, 8))()
+    model = ChessNet()()
 
     checkpoint_path = "training_7/cp.ckpt"
     checkpoint_dir = os.path.dirname(checkpoint_path)

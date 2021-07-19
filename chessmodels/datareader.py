@@ -81,12 +81,12 @@ def vectorise_board(board: chess.Board) -> np.ndarray:
         board.castling_rights,
         0xFFFFFFFFFFFFFFFF if (board.turn == chess.WHITE) else 0
     ]
-    out = np.zeros((11, 8, 8))
+    out = np.zeros((8, 8, 11))
     for i, bb in enumerate(bitboards):
         for square in chess.scan_forward(bb):
             file = chess.square_file(square)
             rank = chess.square_rank(square)
-            out[i][file][rank] = 1
+            out[file][rank][i] = 1
 
     return out
 

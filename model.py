@@ -10,7 +10,7 @@ from tensorflow.keras.models import Model
 from tensorflow import keras
 
 class ChessNet:
-    def __init__(self, dims=(11, 8, 8), xbatch_size=BATCH_SIZE) -> None:
+    def __init__(self, dims=(8, 8, 11), xbatch_size=BATCH_SIZE) -> None:
         print(xbatch_size)
         inputLayer = Input(shape=dims, batch_size=xbatch_size, name="input")
         x = inputLayer
@@ -19,30 +19,30 @@ class ChessNet:
         #################################################################
         a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv1", activation="relu", kernel_initializer='he_uniform')(x)
-        b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        _b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv2", activation="relu", kernel_initializer='he_uniform')(a)
-        b = Add()([a, b])
-        c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        b = Add()([a, _b])
+        _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv3", activation="relu", kernel_initializer='he_uniform')(b)
-        c = Add()([b, c])
-        # x = MaxPooling2D((2, 2), padding="same", name="pool1")(c)
-        # a = Conv2D(128, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv4", activation="relu", kernel_initializer='he_uniform')(x)
-        # b = Conv2D(128, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv5", activation="relu", kernel_initializer='he_uniform')(a)
-        # b = Add()([a, b])
-        # c = Conv2D(128, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv6", activation="relu", kernel_initializer='he_uniform')(b)
-        # c = Add()([b, c])
-        # x = MaxPooling2D((2, 2), padding="same", name="pool2")(c)
-        # a = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv7", activation="relu", kernel_initializer='he_uniform')(x)
-        # b = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv8", activation="relu", kernel_initializer='he_uniform')(a)
-        # b = Add()([a, b])
-        # c = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv9", activation="relu", kernel_initializer='he_uniform')(b)
-        # c = Add()([b, c])
+        c = Add()([b, _c])
+        _a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                   data_format='channels_last', name="Conv4", activation="relu", kernel_initializer='he_uniform')(c)
+        a = Add()([c, _a])
+        _b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                    data_format='channels_last', name="Conv5", activation="relu", kernel_initializer='he_uniform')(a)
+        b = Add()([a, _b])
+        _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                    data_format='channels_last', name="Conv6", activation="relu", kernel_initializer='he_uniform')(b)
+        c = Add()([b, _c])
+        _a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                    data_format='channels_last', name="Conv7", activation="relu", kernel_initializer='he_uniform')(c)
+        a = Add()([c, _a])
+        _b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                    data_format='channels_last', name="Conv8", activation="relu", kernel_initializer='he_uniform')(a)
+        b = Add()([a, _b])
+        _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                    data_format='channels_last', name="Conv9", activation="relu", kernel_initializer='he_uniform')(b)
+        c = Add()([b, _c])
         #################################################################
         ##################### FULLY CONNECTED OUT #######################
         #################################################################
