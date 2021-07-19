@@ -11,13 +11,13 @@ import tensorflow as tf
 def main():
     print(f"{TRAINING_DATA_FILENAME=}\n{VALIDATION_DATA_FILENAME=}")
 
-    xy_train = pd.read_csv(TRAINING_DATA_FILENAME, usecols=list(range(0, 42 + 7)))
+    # xy_train = pd.read_csv(TRAINING_DATA_FILENAME, usecols=list(range(0, 42 + 7)))
 
-    # x_train = pd.read_csv(TRAINING_DATA_FILENAME, usecols=list(range(0, 42)))
-    x_train = xy_train
+    x_train = pd.read_csv(TRAINING_DATA_FILENAME, usecols=list(range(0, 42)))
+    # x_train = xy_train
     print("read x_train!")
 
-    # y_train = pd.read_csv(TRAINING_DATA_FILENAME, usecols=list(range(42, 42 + 7)))
+    y_train = pd.read_csv(TRAINING_DATA_FILENAME, usecols=list(range(42, 42 + 7)))
     print("read y_train!")
 
     

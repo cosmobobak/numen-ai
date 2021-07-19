@@ -1,25 +1,51 @@
 import os
+
+import pandas as pd
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-from model import ChessNet
+from model import ChessNet, SimpleChessNet
 from hyperparams import BATCH_SIZE, EPOCHS, VALIDATION_SPLIT
-from chessmodels.datareader import fen_2_vec, get_training_data
+from chessmodels.datareader import BEST_MATERIAL_ADVANTAGE, fen_2_vec, get_training_data
 
 from tensorflow.python.framework.ops import Tensor
 from chessmodels.UCI_TABLE import allmoves
 from progress.bar import Bar
 from tensorflow import keras
+from tqdm import tqdm
 import tensorflow as tf
 import numpy as np
 import chess.pgn
 import chess
 
+CSV_LINES = 12958036
+BATCH_SCALING = 10
+
 def main():
+    max_examples = 100000
+    maxlen = max_examples // (BATCH_SIZE * BATCH_SCALING) * (BATCH_SIZE * BATCH_SCALING)
     print("getting data!")
-    x_train: np.ndarry = get_training_data(usecols=list(range(0, 1)))
-    y_train: np.ndarry = get_training_data(usecols=list(range(1, 2)))
+    data_generator = get_training_data(maxlen=maxlen)
+
+    count = 0
+    x_train, y_train = [], []
+    for board, value in tqdm(data_generator):
+        x_train.append(board)
+        y_train.append(value)
+        count += 1
+
+    assert count == maxlen, f"{count = }, {maxlen = }"
+    x_train = np.stack(tuple(x_train))
+    y_train = np.array(y_train)
+    assert len(x_train) == count
+    assert len(y_train) == count
+
     print("data loaded!")
 
-    model = ChessNet(dims=(11, 64), eval_model=True)()
+    print(x_train[0])
+    print(y_train[0])
+
+    # exit()
+
+    model = ChessNet(dims=(11, 8, 8))()
 
     checkpoint_path = "training_7/cp.ckpt"
     checkpoint_dir = os.path.dirname(checkpoint_path)
@@ -55,19 +81,9 @@ def main():
     print("Generate predictions for 3 samples")
     boards = [chess.Board(), chess.Board(
         "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"), chess.Board("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2")]
-    samples = [fen_2_vec(b.fen()) for b in boards]
+    samples = np.array([fen_2_vec(b.fen()) for b in boards])
     predictions = model.predict(samples)
-    print("predictions shape:", predictions.shape)
-    moves_in_order = [sorted(list(enumerate(p)), key=lambda x: x[1])
-                      for p in predictions]
-    p = [""] * 3
-    for i, pred in enumerate(moves_in_order):
-        for move in pred:
-            if allmoves[move[0]] in list(map(lambda x: x.uci(), boards[i].legal_moves)):
-                p[i] = allmoves[move[0]]
-                break
-    for b in p:
-        print(b)
+    print(list(map(lambda x: x * BEST_MATERIAL_ADVANTAGE, predictions)))
 
 if __name__ == "__main__":
     main()

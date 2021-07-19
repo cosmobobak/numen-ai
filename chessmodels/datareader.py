@@ -81,10 +81,12 @@ def vectorise_board(board: chess.Board) -> np.ndarray:
         board.castling_rights,
         0xFFFFFFFFFFFFFFFF if (board.turn == chess.WHITE) else 0
     ]
-    out = np.zeros((11, 64))
+    out = np.zeros((11, 8, 8))
     for i, bb in enumerate(bitboards):
         for square in chess.scan_forward(bb):
-            out[i][square] = 1
+            file = chess.square_file(square)
+            rank = chess.square_rank(square)
+            out[i][file][rank] = 1
 
     return out
 
@@ -93,16 +95,30 @@ def fen_2_vec(fen: str) -> np.ndarray:
     return vectorise_board(chess.Board(fen=fen))
 
 
-def mate_2_big(e: str) -> np.ndarray:
+def mate_2_big(e: str) -> int:
     MATE_SCORE = 1000000
     if e[0] == '#':
-        return np.array([int(e[1:]) * MATE_SCORE])
-    return np.array([int(e)])
+        return int(e[1:]) * MATE_SCORE
+    return int(e)
 
 
-def get_training_data(usecols):
-    converters = {
-        "FEN": fen_2_vec,
-        "Evaluation": mate_2_big
-    }
-    return pd.read_csv("chessmodels/chessData.csv", header=0, usecols=usecols, names=["FEN", "Evaluation"], converters=converters, nrows=10000)
+BEST_MATERIAL_ADVANTAGE = 10300
+
+def tanh_scale(x: int) -> float:
+    return x / BEST_MATERIAL_ADVANTAGE
+
+def get_training_data(maxlen):
+    count = 1
+    with open("chessmodels/chessData.csv", "r", encoding="utf-8-sig") as f:
+        for idx, line in enumerate(f):
+            if idx == 0:
+                continue
+            if count > maxlen:
+                break
+            fen, preproc_value = line.split(",")
+            if "#" in preproc_value:
+                continue
+            board, value = fen_2_vec(fen), tanh_scale(int(preproc_value))
+            # board is an ndarray, value is an int.
+            yield board, value
+            count += 1
