@@ -1,5 +1,5 @@
 import numpy as np
-from model import SimpleChessNet, ChessNet
+from model import ChessNet, SimpleChessNet
 import chess
 import chess.pgn
 import tensorflow as tf
