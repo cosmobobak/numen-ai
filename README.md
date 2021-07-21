@@ -1,2 +1,2 @@
 # numen-ai
- Deep Learning for Connect Four
+ Machine Learning for Connect Four && Chess
