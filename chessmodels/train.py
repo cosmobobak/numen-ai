@@ -22,7 +22,7 @@ BATCH_SCALING = 10
 def main():
     model = SimpleChessNet()()
 
-    max_examples = 3000000
+    max_examples = 6000000
     maxlen = max_examples // (BATCH_SIZE * BATCH_SCALING) * (BATCH_SIZE * BATCH_SCALING)
     print("getting data!")
     data_generator = get_training_data(maxlen=maxlen)
@@ -75,7 +75,7 @@ def main():
         validation_split=VALIDATION_SPLIT
     )
 
-    model.save("C:/Users/Cosmo/Documents/GitHub/numen-ai/evalmodel")
+    model.save("evalmodel")
     print("saved model!")
 
     # """Make predictions:"""
