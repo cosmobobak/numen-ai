@@ -118,7 +118,10 @@ def get_training_data(maxlen):
             fen, preproc_value = line.split(",")
             if "#" in preproc_value:
                 continue
-            board, value = fen_2_vec(fen), tanh_scale(int(preproc_value))
+            try:
+                board, value = fen_2_vec(fen), tanh_scale(int(preproc_value))
+            except Exception:
+                continue
             # board is an ndarray, value is an int.
             yield board, value
             count += 1

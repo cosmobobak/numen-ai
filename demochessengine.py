@@ -1,20 +1,20 @@
 import numpy as np
-from model import SimpleChessNet
+from model import SimpleChessNet, ChessNet
 import chess
 import chess.pgn
 import tensorflow as tf
 from chessmodels.datareader import fen_2_vec
 
-loaded_model = tf.keras.models.load_model(
-    "C:/Users/Cosmo/Documents/GitHub/numen-ai/evalmodel")
+#loaded_model = tf.keras.models.load_model(
+#    "C:/Users/Cosmo/Documents/GitHub/numen-ai/evalmodel")
 
-weights = loaded_model.get_weights()
-single_item_model = ChessNet(
+#weights = loaded_model.get_weights()
+single_item_model = SimpleChessNet(
     xbatch_size=1
 )()
 
-single_item_model.set_weights(weights)
-# single_item_model.load_weights(CHECKPOINT_PATH)
+#single_item_model.set_weights(weights)
+single_item_model.load_weights("training_7/cp.ckpt")
 single_item_model.compile(
     optimizer=tf.keras.optimizers.SGD(),
     loss=tf.keras.losses.MeanSquaredError(),

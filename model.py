@@ -17,7 +17,7 @@ class ChessNet:
         #################################################################
         ##################### CONVOLUTIONAL BLOCK #######################
         #################################################################
-        a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        a = Conv2D(64, kernel_size=(1, 1), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv1", activation="relu", kernel_initializer='he_uniform')(x)
         _b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv2", activation="relu", kernel_initializer='he_uniform')(a)
@@ -34,15 +34,15 @@ class ChessNet:
         _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
                     data_format='channels_last', name="Conv6", activation="relu", kernel_initializer='he_uniform')(b)
         c = Add()([b, _c])
-        _a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-                    data_format='channels_last', name="Conv7", activation="relu", kernel_initializer='he_uniform')(c)
-        a = Add()([c, _a])
-        _b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-                    data_format='channels_last', name="Conv8", activation="relu", kernel_initializer='he_uniform')(a)
-        b = Add()([a, _b])
-        _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-                    data_format='channels_last', name="Conv9", activation="relu", kernel_initializer='he_uniform')(b)
-        c = Add()([b, _c])
+        #_a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        #            data_format='channels_last', name="Conv7", activation="relu", kernel_initializer='he_uniform')(c)
+        #a = Add()([c, _a])
+        #_b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        #            data_format='channels_last', name="Conv8", activation="relu", kernel_initializer='he_uniform')(a)
+        #b = Add()([a, _b])
+        #_c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        #            data_format='channels_last', name="Conv9", activation="relu", kernel_initializer='he_uniform')(b)
+        #c = Add()([b, _c])
         #################################################################
         ##################### FULLY CONNECTED OUT #######################
         #################################################################
@@ -67,7 +67,7 @@ class ChessNet:
 
 
 class SimpleChessNet:
-    def __init__(self, dims=(11, 8, 8), xbatch_size=BATCH_SIZE) -> None:
+    def __init__(self, dims=(8, 8, 11), xbatch_size=BATCH_SIZE) -> None:
         print(xbatch_size)
         inputLayer = Input(shape=dims, batch_size=xbatch_size, name="input")
         x = inputLayer

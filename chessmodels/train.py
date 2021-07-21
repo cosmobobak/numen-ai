@@ -20,14 +20,16 @@ CSV_LINES = 12958036
 BATCH_SCALING = 10
 
 def main():
-    max_examples = 100000
+    model = SimpleChessNet()()
+
+    max_examples = 3000000
     maxlen = max_examples // (BATCH_SIZE * BATCH_SCALING) * (BATCH_SIZE * BATCH_SCALING)
     print("getting data!")
     data_generator = get_training_data(maxlen=maxlen)
 
     count = 0
     x_train, y_train = [], []
-    for board, value in tqdm(data_generator):
+    for board, value in tqdm(data_generator, total=maxlen):
         x_train.append(board)
         y_train.append(value)
         count += 1
@@ -45,7 +47,7 @@ def main():
 
     # exit()
 
-    model = ChessNet()()
+    
 
     checkpoint_path = "training_7/cp.ckpt"
     checkpoint_dir = os.path.dirname(checkpoint_path)
