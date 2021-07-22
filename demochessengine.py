@@ -9,7 +9,7 @@ from chessmodels.datareader import fen_2_vec
 #    "C:/Users/Cosmo/Documents/GitHub/numen-ai/evalmodel")
 
 #weights = loaded_model.get_weights()
-single_item_model = SimpleChessNet(
+single_item_model = ChessNet(
     xbatch_size=1
 )()
 

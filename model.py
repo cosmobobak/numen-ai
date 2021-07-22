@@ -2,6 +2,8 @@
 from tensorflow.keras.layers import Conv2D, Flatten, Dense, BatchNormalization, Input, concatenate, Reshape, MaxPooling2D, Add
 import os
 
+from tensorflow.python.keras.layers.core import Dropout
+
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -25,30 +27,15 @@ class ChessNet:
         _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv3", activation="relu", kernel_initializer='he_uniform')(b)
         c = Add()([b, _c])
-        _a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-                   data_format='channels_last', name="Conv4", activation="relu", kernel_initializer='he_uniform')(c)
-        a = Add()([c, _a])
-        _b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-                    data_format='channels_last', name="Conv5", activation="relu", kernel_initializer='he_uniform')(a)
-        b = Add()([a, _b])
-        _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-                    data_format='channels_last', name="Conv6", activation="relu", kernel_initializer='he_uniform')(b)
-        c = Add()([b, _c])
-        #_a = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv7", activation="relu", kernel_initializer='he_uniform')(c)
-        #a = Add()([c, _a])
-        #_b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv8", activation="relu", kernel_initializer='he_uniform')(a)
-        #b = Add()([a, _b])
-        #_c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
-        #            data_format='channels_last', name="Conv9", activation="relu", kernel_initializer='he_uniform')(b)
-        #c = Add()([b, _c])
         #################################################################
         ##################### FULLY CONNECTED OUT #######################
         #################################################################
         x = Flatten()(c)
+        x = Dropout(0.1)(x)
         x = Dense(512, activation="relu", name="Dense1")(x)
+        x = Dropout(0.1)(x)
         x = Dense(256, activation="relu", name="Dense2")(x)
+        x = Dropout(0.1)(x)
         x = Dense(128, activation="relu", name="Dense3")(x)
         outputLayer = Dense(1, name="eval", activation="tanh")(x)
 

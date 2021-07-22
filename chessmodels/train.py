@@ -20,7 +20,7 @@ CSV_LINES = 12958036
 BATCH_SCALING = 10
 
 def main():
-    model = SimpleChessNet()()
+    model = ChessNet()()
 
     max_examples = 6000000
     maxlen = max_examples // (BATCH_SIZE * BATCH_SCALING) * (BATCH_SIZE * BATCH_SCALING)
