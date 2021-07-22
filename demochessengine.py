@@ -30,7 +30,8 @@ while not board.is_game_over():
     for move in board.generate_legal_moves():
         board.push(move)
         tgt = np.array([fen_2_vec(board.fen())])
-        value: float = single_item_model(tgt)[0]
+        value: float = float(single_item_model(tgt)[0][0])
+        print(value, f"{type(value) = }")
         board.pop()
         if board.turn == chess.BLACK:
             value = -value
