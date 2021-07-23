@@ -38,11 +38,13 @@ class ChessNet:
         _c = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv3", activation="relu", kernel_initializer='he_uniform')(b)
         c = Add()([b, _c])
-        x = residual_block(c)
+        x = c
+        #x = residual_block(x)
+        #x = residual_block(x)
         #################################################################
         ##################### FULLY CONNECTED OUT #######################
         #################################################################
-        x = Flatten()(c)
+        x = Flatten()(x)
         x = Dropout(0.1)(x)
         x = Dense(512, activation="relu", name="Dense1")(x)
         x = Dropout(0.1)(x)
