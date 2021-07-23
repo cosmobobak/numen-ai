@@ -11,6 +11,17 @@ from hyperparams import BATCH_SIZE
 from tensorflow.keras.models import Model
 from tensorflow import keras
 
+def residual_block(x):
+    _a = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
+               data_format='channels_last', activation="relu", kernel_initializer='he_uniform')(x)
+    a = Add()([_a, x])
+    _b = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                data_format='channels_last', activation="relu", kernel_initializer='he_uniform')(a)
+    b = Add()([a, _b])
+    _c = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
+                data_format='channels_last', activation="relu", kernel_initializer='he_uniform')(b)
+    return Add()([b, _c])
+
 class ChessNet:
     def __init__(self, dims=(8, 8, 11), xbatch_size=BATCH_SIZE) -> None:
         print(xbatch_size)
@@ -19,14 +30,15 @@ class ChessNet:
         #################################################################
         ##################### CONVOLUTIONAL BLOCK #######################
         #################################################################
-        a = Conv2D(64, kernel_size=(1, 1), strides=(1, 1), padding="same",
+        a = Conv2D(256, kernel_size=(1, 1), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv1", activation="relu", kernel_initializer='he_uniform')(x)
-        _b = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        _b = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv2", activation="relu", kernel_initializer='he_uniform')(a)
         b = Add()([a, _b])
-        _c = Conv2D(64, kernel_size=(2, 2), strides=(1, 1), padding="same",
+        _c = Conv2D(256, kernel_size=(2, 2), strides=(1, 1), padding="same",
                    data_format='channels_last', name="Conv3", activation="relu", kernel_initializer='he_uniform')(b)
         c = Add()([b, _c])
+        x = residual_block(c)
         #################################################################
         ##################### FULLY CONNECTED OUT #######################
         #################################################################
