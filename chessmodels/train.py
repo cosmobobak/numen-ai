@@ -22,7 +22,10 @@ BATCH_SCALING = 10
 def main():
     model = ChessNet()()
 
-    max_examples = 6000000
+    try:
+        max_examples = int(input("num training samples? "))
+    except Exception:
+        max_examples = 6000000
     maxlen = max_examples // (BATCH_SIZE * BATCH_SCALING) * (BATCH_SIZE * BATCH_SCALING)
     print("getting data!")
     data_generator = get_training_data(maxlen=maxlen)
